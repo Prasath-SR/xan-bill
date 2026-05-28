@@ -44,3 +44,5 @@ pnpm db:seed
 ## Local MySQL
 
 This project now reads its page data from MySQL on the server side. The default local connection is configured for `xan_bill` in `.env.example`, and the seed command populates real database tables used by the app.
+
+## Success
