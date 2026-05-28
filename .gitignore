@@ -32,9 +32,6 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-DATABASE_URL="postgresql://postgres.wjqenlatzljudroexrba:Vasu%401612200@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
-DIRECT_URL="postgresql://postgres:Vasu%401612200@db.wjqenlatzljudroexrba.supabase.co:5432/postgres?sslmode=require"
-JWT_SECRET="161220041612200416122004161220041612200416122004"
 
 # vercel
 .vercel
