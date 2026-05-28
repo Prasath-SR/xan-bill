@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CASHIER
+}
+
+enum DiningMode {
+  DINE_IN
+  PARCEL
+}
+
+enum OrderStatus {
+  OPEN
+  BILLED
+  CANCELLED
+}
+
+
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  MIXED
+}
+
+enum TableStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+}
+
+model Branch {
+  id           String             @id @default(cuid())
+  name         String
+  code         String             @unique
+  address      String?
+  phone        String?
+  isActive     Boolean            @default(true)
+  
+  users        User[]
+  tables       RestaurantTable[]
+  orders       Order[]
+
+  
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model User {
+  id            String       @id @default(cuid())
+  staffCode     String       @unique
+  name          String
+  email         String?      @unique
+  passwordHash  String
+  role          UserRole
+  isActive      Boolean      @default(true)
+  branchId      String?
+  branch        Branch?      @relation(fields: [branchId], references: [id])
+
+  createdOrders Order[]      @relation("CreatedOrders")
+  payments      Payment[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  isActive    Boolean    @default(true)
+  menuItems   MenuItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model MenuItem {
+  id          String      @id @default(cuid())
+  name        String
+  sku         String?     @unique
+  description String?
+  imageUrl    String?
+  price       Decimal     @db.Decimal(10, 2)
+  parcelPrice Decimal?    @db.Decimal(10, 2)
+  gstRate     Decimal     @db.Decimal(5, 2)
+  isCombo     Boolean     @default(false)
+  isAvailable Boolean     @default(true)
+  isEnabled   Boolean     @default(true)
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model RestaurantTable {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  capacity    Int
+  zone        String?
+  status      TableStatus @default(AVAILABLE)
+  reservedFor String?
+  branchId    String?
+  branch      Branch?     @relation(fields: [branchId], references: [id])
+  orders      Order[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Order {
+  id             String           @id @default(cuid())
+  orderNumber    String           @unique
+  diningMode     DiningMode
+  status         OrderStatus      @default(OPEN)
+  customerName   String?
+  notes          String?
+  discountAmount Decimal          @default(0) @db.Decimal(10, 2)
+  taxAmount      Decimal          @default(0) @db.Decimal(10, 2)
+  subtotalAmount Decimal          @default(0) @db.Decimal(10, 2)
+  totalAmount    Decimal          @default(0) @db.Decimal(10, 2)
+  tableId        String?
+  branchId       String?
+  createdById    String
+  table          RestaurantTable? @relation(fields: [tableId], references: [id])
+  branch         Branch?          @relation(fields: [branchId], references: [id])
+  createdBy      User             @relation("CreatedOrders", fields: [createdById], references: [id])
+  items          OrderItem[]
+  payments       Payment[]
+  bill           Bill?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  menuItemId  String
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  taxRate     Decimal  @db.Decimal(5, 2)
+  totalAmount Decimal  @db.Decimal(10, 2)
+  notes       String?
+  order       Order    @relation(fields: [orderId], references: [id])
+  menuItem    MenuItem @relation(fields: [menuItemId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model Payment {
+  id        String        @id @default(cuid())
+  orderId   String
+  userId    String
+  method    PaymentMethod
+  amount    Decimal       @db.Decimal(10, 2)
+  reference String?
+  order     Order         @relation(fields: [orderId], references: [id])
+  user      User          @relation(fields: [userId], references: [id])
+  createdAt DateTime      @default(now())
+}
+
+model Bill {
+  id                 String    @id @default(cuid())
+  orderId            String    @unique
+  invoiceNumber      String    @unique
+  printedAt          DateTime?
+  cancelledAt        DateTime?
+  cancellationReason String?
+  order              Order     @relation(fields: [orderId], references: [id])
+  createdAt          DateTime  @default(now())
+}
+
+
+
+
+model CompanyProfile {
+  id           String   @id @default(cuid())
+  code         String   @unique @default("default")
+  companyName  String
+  address      String
+  gstin        String?
+  fssai        String?
+  phone        String?
+  email        String?
+  logoUrl      String?
+  invoiceTitle String   @default("TAX INVOICE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

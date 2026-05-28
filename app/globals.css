@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fffaf2;
+  --foreground: #20150f;
+  --surface: rgba(255, 255, 255, 0.76);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --muted: #6e5e55;
+  --line: rgba(85, 53, 34, 0.12);
+  --accent: #c7672f;
+  --accent-strong: #8f3d16;
+  --success: #156f4e;
+  --warning: #c07819;
+  --danger: #b53a2d;
+  --shadow: 0 24px 60px rgba(74, 40, 20, 0.14);
+  --font-ui: "Segoe UI", "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
+  --font-display: Georgia, Cambria, "Times New Roman", serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-ui);
+  --font-serif: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ui);
+  background-image:
+    radial-gradient(circle at top left, rgba(199, 103, 47, 0.18), transparent 30%),
+    radial-gradient(circle at 85% 15%, rgba(250, 203, 127, 0.25), transparent 24%),
+    linear-gradient(180deg, #fff8f0 0%, #fffaf2 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(199, 103, 47, 0.22);
+}
+
+.app-shell {
+  width: 100%;
+  background:
+    radial-gradient(circle at top right, rgba(255, 220, 175, 0.6), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.15) 100%);
+}
+
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -15% -35% auto;
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background: rgba(199, 103, 47, 0.1);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.pill-neutral {
+  background: rgba(32, 21, 15, 0.06);
+  color: var(--foreground);
+}
+
+.pill-success {
+  background: rgba(21, 111, 78, 0.12);
+  color: var(--success);
+}
+
+.pill-warning {
+  background: rgba(192, 120, 25, 0.14);
+  color: var(--warning);
+}
+
+.pill-danger {
+  background: rgba(181, 58, 45, 0.12);
+  color: var(--danger);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgba(85, 53, 34, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(85, 53, 34, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
